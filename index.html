@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>My Python Web App</title>
+    <title>Coin Tosser Web App</title>
     
     <!-- Link to the PyScript Core files -->
     <link rel="stylesheet" href="https://pyscript.net" />
@@ -18,6 +18,7 @@
             padding: 40px;
             max-width: 800px;
             margin: 0 auto;
+            text-align: center;
         }
         h1 {
             color: #ffffff;
@@ -31,57 +32,73 @@
             background-color: #10b981;
             color: white;
             border: none;
-            padding: 12px 24px;
-            font-size: 16px;
+            padding: 14px 28px;
+            font-size: 18px;
             font-weight: bold;
             border-radius: 6px;
             cursor: pointer;
-            transition: background 0.2s;
+            transition: background 0.2s, transform 0.1s;
             margin-bottom: 20px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
         }
         .btn-run:hover {
             background-color: #059669;
+        }
+        .btn-run:active {
+            transform: scale(0.98);
         }
         /* Custom Terminal Output Styling */
         #terminal-output {
             background-color: #1e1e1e;
             color: #38bdf8;
             font-family: 'Courier New', Courier, monospace;
-            padding: 20px;
+            font-size: 20px;
+            padding: 30px;
             border-radius: 8px;
             border: 1px solid #333;
-            min-height: 150px;
+            min-height: 100px;
             white-space: pre-wrap;
-            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.5);
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.5);
+            max-width: 400px;
+            margin: 0 auto;
         }
     </style>
 </head>
 <body>
 
     <h1>Welcome to My Browser App</h1>
-    <p>Click the button below to run the Python code natively in your browser.</p>
+    <p>Click the button below to flip the coin natively in your browser.</p>
 
     <!-- Run Button -->
-    <button class="btn-run" id="run-btn">Run Code</button>
+    <button class="btn-run" id="run-btn">Flip Coin 🪙</button>
 
     <!-- Terminal screen where PyScript will display your code results -->
-    <div id="terminal-output">Click "Run Code" to execute the script...</div>
+    <div id="terminal-output">Click "Flip Coin" to start...</div>
 
-    <!-- The PyScript logic setup -->
-    <script type="py" config="./pyscript.toml">
+    <!-- Python Code Embedded Directly into HTML -->
+    <script type="py">
+        import random
         from pyodide.ffi import create_proxy
         from js import document
-        import main
+        from pyscript import display
 
-        # Function that handles the button click event
-        def on_click_handler(event):
-            # Clear out the initial text placeholder
+        # Your custom coin tosser logic wrapped inside the click function
+        def flip_the_coin(event):
+            # 1. Clear out previous flip results
             document.getElementById("terminal-output").innerHTML = ""
-            # Run the primary function inside your main.py file
-            main.run_my_script()
+            
+            # 2. Print Game Header
+            display("--- Coin Tosser ---", target="terminal-output")
+            
+            # 3. Process the random flip logic
+            tosser = random.randint(0, 1)
+            if tosser == 0:
+                display("Heads 🪙", target="terminal-output")
+            else:
+                display("Tails 🪙", target="terminal-output")
 
-        # Connect the Python click handler function to the HTML button
-        click_proxy = create_proxy(on_click_handler)
+        # Connect the Python function directly to the HTML button click
+        click_proxy = create_proxy(flip_the_coin)
         document.getElementById("run-btn").addEventListener("click", click_proxy)
     </script>
 
