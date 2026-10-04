@@ -5,9 +5,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Coin Tosser Web App</title>
     
-    <!-- Link to the PyScript Core files -->
+    <!-- Core PyScript Setup -->
     <link rel="stylesheet" href="https://pyscript.net" />
-    <script type="module" src="https://pyscript.net"></script>
+    <script type="module" src="https://pyscript.net/releases/2024.1.1/core.js"></script>
 
     <!-- Dark Theme Styling -->
     <style>
@@ -47,12 +47,12 @@
         .btn-run:active {
             transform: scale(0.98);
         }
-        /* Custom Terminal Output Styling */
+        /* Visual Dark Terminal Output */
         #terminal-output {
             background-color: #1e1e1e;
             color: #38bdf8;
             font-family: 'Courier New', Courier, monospace;
-            font-size: 20px;
+            font-size: 22px;
             padding: 30px;
             border-radius: 8px;
             border: 1px solid #333;
@@ -69,37 +69,24 @@
     <h1>Welcome to My Browser App</h1>
     <p>Click the button below to flip the coin natively in your browser.</p>
 
-    <!-- Run Button -->
-    <button class="btn-run" id="run-btn">Flip Coin 🪙</button>
+    <!-- The native py-click handler links directly to the Python function name -->
+    <button class="btn-run" id="run-btn" py-click="flip_the_coin">Flip Coin 🪙</button>
 
-    <!-- Terminal screen where PyScript will display your code results -->
-    <div id="terminal-output">Click "Flip Coin" to start...</div>
+    <div id="terminal-output">Loading Python environment... Ready!</div>
 
-    <!-- Python Code Embedded Directly into HTML -->
+    <!-- Clean, Direct Inline Python Logic -->
     <script type="py">
         import random
-        from pyodide.ffi import create_proxy
-        from js import document
         from pyscript import display
 
-        # Your custom coin tosser logic wrapped inside the click function
         def flip_the_coin(event):
-            # 1. Clear out previous flip results
-            document.getElementById("terminal-output").innerHTML = ""
-            
-            # 2. Print Game Header
-            display("--- Coin Tosser ---", target="terminal-output")
-            
-            # 3. Process the random flip logic
+            # Roll your game logic
             tosser = random.randint(0, 1)
+            
             if tosser == 0:
-                display("Heads 🪙", target="terminal-output")
+                display("Heads 🪙", target="terminal-output", append=False)
             else:
-                display("Tails 🪙", target="terminal-output")
-
-        # Connect the Python function directly to the HTML button click
-        click_proxy = create_proxy(flip_the_coin)
-        document.getElementById("run-btn").addEventListener("click", click_proxy)
+                display("Tails 🪙", target="terminal-output", append=False)
     </script>
 
 </body>
